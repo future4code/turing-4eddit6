@@ -5,7 +5,8 @@
  import { Container } from './style'
 
 
-const baseUrl = "https://us-central1-labenu-apis.cloudfunctions.net/labEddit"
+const baseUrl = "https://us-central1-labenu-apis.cloudfunctions.net/labEddit";
+
 
 
 const Login = () => {
@@ -22,7 +23,8 @@ const Login = () => {
   }
 
   const handleLogin = event => {
-    event.preventDefault()
+    event.preventDefault();
+    
     const body = {
       email: form.email,
       password: form.password
@@ -32,6 +34,7 @@ const Login = () => {
     .then(response => {
       console.log(response.data)
       history.push("/feed")
+      window.localStorage.setItem("token", response.data.token)
       alert(`Login efetuado com sucesso! Seja bem vindo(a) ${form.email}`)
     }).catch(err => {
       console.log(err.message)
