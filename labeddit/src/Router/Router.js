@@ -1,10 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Login from '../Components/Login/Login';
-import SingIn from '../Components/SingIn/SingIn';
+import Signup from '../Components/Signup/Signup';
 import Feed from '../Components/Feed/Feed';
-// import { Container } from './styles';
-
 
 function Router() {
   return  (
@@ -13,12 +11,15 @@ function Router() {
             <Route exact path="/" >
                 <Login />
             </Route>
-            <Route exact path="/login" >
-                <SingIn />
+
+            <Route exact path="/signup" >
+                <Signup />
             </Route>
+
             <Route exact path="/create" >
                 <Feed />
             </Route>
+
             <Route path="/" >
                 <h3>Eita Giovana, o forninho caiu (404)</h3>
             </Route>
@@ -26,4 +27,5 @@ function Router() {
     </BrowserRouter>
   )
 }
+
 export default Router;
