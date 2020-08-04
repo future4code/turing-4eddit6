@@ -16,7 +16,7 @@ function Router() {
                 <Signup />
             </Route>
 
-            <Route exact path="/create" >
+            <Route exact path="/feed" >
                 <Feed />
             </Route>
 
