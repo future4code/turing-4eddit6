@@ -4,9 +4,6 @@ import Login from '../Components/Login/Login';
 import Signup from '../Components/Signup/Signup';
 import Feed from '../Components/Feed/Feed';
 
-
-// import { Container } from './styles';
-
 function Router() {
   return  (
     <BrowserRouter>
