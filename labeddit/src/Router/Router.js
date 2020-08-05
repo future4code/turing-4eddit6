@@ -9,14 +9,18 @@ function Router() {
     <BrowserRouter>
         <Switch>
             <Route exact path="/" >
-                <Login />
-            </Route>
-
-            <Route exact path="/signup" >
                 <Signup />
             </Route>
 
+            <Route exact path="/login" >
+                <Login />
+            </Route>
+
             <Route exact path="/feed" >
+                <Feed />
+            </Route>
+
+            <Route exact path="/post" >
                 <Feed />
             </Route>
 

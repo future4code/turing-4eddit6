@@ -42,7 +42,7 @@ const Login = () => {
   }
 
   const onClickSignUp = () => { 
-    history.push("/signup")
+    history.push("/")
   }
 
   return (

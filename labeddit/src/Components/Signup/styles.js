@@ -1,6 +1,6 @@
-import style from 'styled-components'
+import styled from 'styled-components'
 
-export const Container = style.div`
+export const Container = styled.div`
     form {
         align-items: center;
         display: flex;
@@ -19,5 +19,6 @@ export const Container = style.div`
         border-radius: 4px;
         background-color: #5555;
         padding: 8px;
+        margin-bottom: 10px;
     }
 `
