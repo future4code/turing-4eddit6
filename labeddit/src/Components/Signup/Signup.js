@@ -1,11 +1,13 @@
 import React from 'react';
 import { Container } from './styles';
 import useForm from '../../Hooks/useForm'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 
 const baseUrl = "https://us-central1-labenu-apis.cloudfunctions.net/labEddit/signup"
 
 function Signup() {
+  const history = useHistory()
   const { form, onChange } = useForm({
     userName: "",
     email: "",
@@ -34,6 +36,10 @@ function Signup() {
       console.log(err.message)
     })
   } 
+
+  const onClickLogin = () => { 
+    history.push("/login")
+  }
   return (
     <Container>
       <h2>Sign up</h2>
@@ -67,6 +73,7 @@ function Signup() {
 
         <button>Cadastrar</button>
       </form>
+      <button onClick={onClickLogin}>Login</button>
     </Container>
   )
 }
