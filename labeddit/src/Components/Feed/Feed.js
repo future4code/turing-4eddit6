@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Header, Post, Comments } from './style'
+import { Container,  Post } from './style'
+import PostDetail from '../PostDetail/PostDetail'
+import Header from '../Header/Header'
 
 const baseUrl = "https://us-central1-labenu-apis.cloudfunctions.net/labEddit/posts";
 const token = window.localStorage.getItem("token");
@@ -13,22 +15,23 @@ const axiosConfig = {
 
 function Feed() {
   const [posts, setPosts] = useState([]);
-  const [comments, setComments] = useState([]);
   const [idPost, setIdPost] = useState("");
-  const [text, setText] = useState("");
-  const [title, setTitle] = useState("");
+
+  const [showDetailPost, setShowDetailPost] = useState(false);
+
+  const handleShowDetail = () => {
+    setShowDetailPost(!showDetailPost)
+  }
+
+  const getIdPost = id => {
+    setIdPost(id)
+    handleShowDetail()
+  }
 
   useEffect(() => {
     getAllPosts()
   }, [])
 
-  const handleText = (e) =>{
-    setText(e.target.value)
-  }
-
-  const handleTitle = (e) => {
-    setTitle(e.target.value)
-  }
 
   const getAllPosts = () => {
     
@@ -40,44 +43,20 @@ function Feed() {
     })
   }
 
-  const getDetailPosts = ( idPost ) => {
-    axios.get(`${baseUrl}/${idPost}`, axiosConfig)
-    .then(response => {
-      setComments(response.data.post.comments)
-      setIdPost(idPost)
-    }).catch(err => {
-      console.log(err.message)
-    })
-  }
-
-  const createPost = (event) => {
-    event.preventDefault();
-
-    const body = { 
-      "text": text,
-      "title": title
-    }
-
-    axios
-    .post(`${baseUrl}`, body, axiosConfig)
-    .then(response => {
-      console.log(response.data)
-      getAllPosts();
-    }).catch(err => {
-      console.log(err.message)
-    })
-  }
-
-  const putVote = ( idPost, vote, upDown ) => {
-    let choice = vote
-    if( upDown === 1 ) {
-      choice += 1
+  const putVote = ( idPost, direction, upDown ) => {
+    let vote
+    if( direction === 1 || direction === -1){
+      vote = 0
     } else {
-      choice -= 1
+      if( upDown === "UP" ) {
+        vote = 1
+      } else {
+        vote = -1
+      }
     }
 
     const body = { 
-      "direction": choice
+      "direction": vote
     }
 
     axios.put(`${baseUrl}/${idPost}/vote`, body, axiosConfig)
@@ -91,51 +70,35 @@ function Feed() {
   
   return (
     <Container>
-      <Header>
-        <form onSubmit={createPost}>
-          <input
-            onChange={handleTitle}
-            required
-            placeholder="title"
-          ></input>
-          <input
-            onChange={handleText}
-            required
-            placeholder="text"
-          ></input>
-          <button>Postar</button>
-        </form>
-      </Header>
-      <section>
-        {posts.map(post => {
-          return (
-            <Post key={post.id} onClick={() => getDetailPosts(post.id)}>
-              <div>
-                <span onClick={() => putVote(post.id, post.votesCount, 1)}>+</span>
-                <span>{post.votesCount}</span>
-                <span onClick={() => putVote(post.id, post.votesCount, -1)}>-</span>
-              </div>
-              <div>
-                <h3>{post.username}</h3>
-                <div>
-                  <p>{post.title}</p>
-                  <p>{post.text}</p>
-                </div>
-                { post.id === idPost ?
-                  <Comments>
-                    {comments.map(comment => {
-                      return <p key={comment.id}>{comment.text}</p>
-                    })}
-                  </Comments>
-                : 
-                  <p onClick={() => getDetailPosts(post.id)}>Comentários</p>
-                }
-              </div>
-            </Post>
-          )
-        })}
-        
-      </section>
+      <Header changeHeader={showDetailPost} idPost={idPost}/>
+      { posts.length === 0 ?
+        <div>Loading...</div>
+      :
+        <section>
+          { showDetailPost === false ?
+            <>{posts.map(post => {
+              return (
+                    <Post key={post.id}>
+                      <div>
+                        <span onClick={() => putVote(post.id, post.userVoteDirection, "UP")}>+</span>
+                        <span>{post.votesCount}</span>
+                        <span onClick={() => putVote(post.id, post.userVoteDirection, "DOWN")}>-</span>
+                      </div>
+                      <div>
+                        <h3>{post.username}</h3>
+                        <div>
+                          <p>{post.title}</p>
+                          <p onClick={() => getIdPost(post.id)}>{post.text}</p>
+                        </div>
+                      </div>
+                    </Post>  
+              )
+            })}</>
+          :
+            <PostDetail idPost={idPost} goBack={handleShowDetail}/>
+          }
+        </section>
+      }
     </Container>
   ) 
 }
